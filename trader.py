@@ -1,16 +1,10 @@
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
-
 
 # path = ""
 # train_data = pd.read_csv(path+"training_data.csv", header=None)
 
 # print(train_data.shape)
-
-# class Trader:
-#     def __init__(self):
-
 
 class Tester:
     state = 0
@@ -25,9 +19,13 @@ class Tester:
 
     def doAction(self, row, action):
         if self.prevAction == 1 or self.prevAction == "1":
+            if self.state == 1:
+                raise Exception("stock logic error")
             self.state += 1
             self.money -= row[0]
         elif self.prevAction == -1 or self.prevAction == "-1":
+            if self.state == -1:
+                raise Exception("stock logic error")
             self.state -= 1
             self.money += row[0]
 
@@ -39,6 +37,17 @@ class Tester:
         if self.lastRow.size >= 3:
             self.money += self.state * self.lastRow[3]
         print('money : ' + str(self.money) )
+
+def getMA(data, today, N):
+    # no MA
+    if today+1 < N:
+        return -1
+    
+    total = 0
+    for i in range(N):
+        total += data[3][today-i]
+    
+    return total / N
 
 
 # You can write code above the if-main block.
@@ -68,14 +77,30 @@ if __name__ == '__main__':
     testing_data = pd.read_csv(args.testing, header=None)
     tester = Tester()
     # print(testing_data.shape)
+
+    state = 0
     with open(args.output, 'w') as output_file:
         for index,row in testing_data.iterrows():
             # We will perform your action as the open price in the next day.
             # action = trader.predict_action(datum)
+            ma5 = getMA(testing_data, index, 5)
+            ma10 = getMA(testing_data, index, 10)
 
-            action = "0"
-            if (index == 0):
+            close = row[3]
+
+            if close > ma5 and ma5 > ma10 and state < 1:
                 action = "1"
+                state += 1
+            elif ma10 > ma5 and ma5 > close and state > -1:
+                action = "-1"
+                state -= 1
+            else:
+                action = "0"
+
+            #action = "0"
+            #if (index == 0):
+            #    action = "1"
+            
 
             tester.doAction(row, action)
 
