@@ -1,11 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# path = ""
-# train_data = pd.read_csv(path+"training_data.csv", header=None)
-
-# print(train_data.shape)
-
 class Tester:
     state = 0
     money = 0
@@ -38,21 +33,6 @@ class Tester:
             self.money += self.state * self.lastRow[3]
         print('profit : ' + str(self.money) )
 
-def getMA(data, today, N):
-    # no MA
-    if today+1 < N:
-        return -1
-    
-    total = 0
-    for i in range(N):
-        # total += data[0][today-i]
-        total += data[1][today-i]
-        total += data[2][today-i]
-        # total += data[3][today-i]
-    
-    return total / 2 / N
-
-
 # You can write code above the if-main block.
 
 if __name__ == '__main__':
@@ -67,7 +47,7 @@ if __name__ == '__main__':
                         default='testing_data.csv',
                         help='input testing data file name')
     parser.add_argument('--output',
-                        default='output.csv',
+                        default='baseoutput.csv',
                         help='output file name')
     args = parser.parse_args()
     
@@ -88,31 +68,10 @@ if __name__ == '__main__':
             # We will perform your action as the open price in the next day.
             # action = trader.predict_action(datum)
 
-
-            ma5 = getMA(testing_data, index, 5)
-            ma10 = getMA(testing_data, index, 10)
-
-            close = row[3]
-
-            if ma5 == -1:
-                ma5 = close
-            if ma10 == -1:
-                ma10 = close
-
-            if close > ma5 and ma5 > ma10 and state < 1:
-                action = "1"
-                state += 1
-            elif ma10 > ma5 and ma5 > close and state > -1:
-                action = "-1"
-                state -= 1
-            else:
-                action = "0"
-
-            # action = "0"
-            # if (index == 0):
-            #    action = "1"
+            action = "0"
+            if (index == 0):
+               action = "1"
             
-
             tester.doAction(row, action)
 
             if index == testing_data.shape[0]-1:
