@@ -8,4 +8,4 @@
 
 ### document
 
-[trader.ipynb By nbviewer](https://nbviewer.jupyter.org/github/csielee/dsai2018_hw1/blob/master/trader.ipynb)
+[trader.ipynb By nbviewer](https://nbviewer.jupyter.org/github/csielee/dsai2018_hw1/blob/master/trader.ipynb?flush_cache=true)
