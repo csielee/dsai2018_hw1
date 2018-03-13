@@ -1,11 +1,6 @@
 import pandas as pd
 import numpy as np
 
-# path = ""
-# train_data = pd.read_csv(path+"training_data.csv", header=None)
-
-# print(train_data.shape)
-
 class Tester:
     state = 0
     money = 0
@@ -73,21 +68,18 @@ if __name__ == '__main__':
     
     # The following part is an example.
     # You can modify it at will.
-    training_data = pd.read_csv(args.training)
+    training_data = pd.read_csv(args.training, header=None)
     # trader = Trader()
     # trader.train(training_data)
     
     testing_data = pd.read_csv(args.testing, header=None)
     tester = Tester()
-    # print(testing_data.shape)
-    # print(testing_data.shape[0])
 
     state = 0
     with open(args.output, 'w') as output_file:
         for index,row in testing_data.iterrows():
             # We will perform your action as the open price in the next day.
             # action = trader.predict_action(datum)
-
 
             ma5 = getMA(testing_data, index, 5)
             ma10 = getMA(testing_data, index, 10)
@@ -108,11 +100,7 @@ if __name__ == '__main__':
             else:
                 action = "0"
 
-            # action = "0"
-            # if (index == 0):
-            #    action = "1"
             
-
             tester.doAction(row, action)
 
             if index == testing_data.shape[0]-1:
@@ -122,7 +110,4 @@ if __name__ == '__main__':
                 output_file.write("\n")
             output_file.write(action)
 
-            # this is your option, you can leave it empty.
-            # trader.re_training(i)
-        
         tester.endAction()
